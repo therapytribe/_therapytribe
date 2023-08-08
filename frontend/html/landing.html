@@ -200,7 +200,7 @@
         <div class="landing-block landing-block-map">
             <div class="map-background" style="background-image: url('{% static "images/landing/map.jpg" %}');">
             </div>
-
+            <!--
             <div class="map-container">
                 <div class="map-sidebar hide-on-iphone">
                     <div class="map-sidebar-item">📍 В моем городе</div>
@@ -228,7 +228,9 @@
                 </div>
             </div>
         </div>
+        -->
 
+        {% if not features.FREE_MEMBERSHIP %}
         <div class="landing-block landing-block-narrow" id="join">
             <div>
                 <h2 class="landing-block-title">Как вступить?</h2>
@@ -246,11 +248,31 @@
 
                 <br>
 
+            <!--
                 <p>
                     <a href="{% url "join" %}" class="button button-black button-big">Вступить в Клуб</a>
                 </p>
+            -->
             </div>
         </div>
+        {% else %}
+        <div class="landing-block landing-block-narrow" id="join">
+            <div>
+                <h2 class="landing-block-title">Как вступить?</h2>
+
+                <p>
+                    Членство в Клубе пока бесплатное - успейте присоединиться.
+                    Но мы не пускаем анонимов. Вам придется заполнить профиль и рассказать о себе.
+                </p>
+
+                <br>
+
+                <p>
+                    <a href="{% url "login" %}" class="button button-black">Вступить в клуб</a>
+                </p>
+            </div>
+        </div>
+        {% endif %}
     </main>
 {% endblock %}
 
