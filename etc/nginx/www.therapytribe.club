@@ -1,0 +1,1 @@
+rewrite ^(.*) https://therapytribe.club$1 permanent;
