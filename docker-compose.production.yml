@@ -1,7 +1,15 @@
 version: "3"
+networks:
+  front:
+    name: therapytribe_network
+  club:
+    name: club_network
 services:
   club_app: &app
     image: ghcr.io/therapytribe/_therapytribe:${GITHUB_SHA:-latest}
+    build:
+      dockerfile: Dockerfile
+      context: .
     command: make docker-run-production
     container_name: club_app
     environment:
@@ -86,7 +94,7 @@ services:
     #   - club
 
   postgres:
-    image: postgres:11 #12
+    image: postgres:12
     container_name: club_postgres
     restart: always
     environment:
@@ -99,6 +107,29 @@ services:
       - "127.0.0.1:54333:5432"
     networks:
     - club
+  
+  # pgbackups:
+  #   image: pgbackups:prodrigestivill/postgres-backup-local
+  #   restart: always
+  #   volumes:
+  #     - /root/backup/therapytribe/pgdata:/backups
+  #   links:
+  #     - postgres
+  #   depends_on:
+  #     - postgres
+  #   environment:
+  #     - POSTGRES_HOST=postgres
+  #     - POSTGRES_DB=therapytribe_club
+  #     - POSTGRES_USER=therapytribeclub
+  #     - POSTGRES_PASSWORD=therapytribeclub
+  #     - POSTGRES_EXTRA_OPTS=-Z6 --schema=public --blobs
+  #     - SCHEDULE=@weekly
+  #     - BACKUP_KEEP_DAYS=7
+  #     - BACKUP_KEEP_WEEKS=4
+  #     - BACKUP_KEEP_MONTHS=6
+  #     - HEALTHCHECK_PORT=8080
+  #   networks:
+  #     - club
 
   redis:
     image: redis:alpine
@@ -108,32 +139,4 @@ services:
       - ALLOW_EMPTY_PASSWORD=yes
     networks:
       - club
-  
-  pgbackups:
-  image: prodrigestivill/postgres-backup-local
-  restart: always
-  volumes:
-    - /root/backup/therapytribe/pgdata:/backups
-  links:
-    - postgres
-  depends_on:
-    - postgres
-  environment:
-    - POSTGRES_HOST=postgres
-    - POSTGRES_DB=therapytribe_club
-    - POSTGRES_USER=therapytribeclub
-    - POSTGRES_PASSWORD=therapytribeclub
-    - POSTGRES_EXTRA_OPTS=-Z6 --schema=public --blobs
-    - SCHEDULE=@weekly
-    - BACKUP_KEEP_DAYS=7
-    - BACKUP_KEEP_WEEKS=4
-    - BACKUP_KEEP_MONTHS=6
-    - HEALTHCHECK_PORT=8080
-  networks:
-    - club 
 
-  networks:
-    front:
-      name: pmi_network
-    club:
-      name: club_network
