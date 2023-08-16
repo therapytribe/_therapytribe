@@ -6,7 +6,7 @@ networks:
     name: club_network
 services:
   club_app: &app
-    image: ghcr.io/therapytribe/_therapytribe:${GITHUB_SHA:-latest}
+    image: ghcr.io/therapytribe/club:${GITHUB_SHA:-latest}
     build:
       dockerfile: Dockerfile
       context: .
